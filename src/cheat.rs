@@ -81,10 +81,14 @@ pub fn infinite_arrows() -> Result<(), Box<dyn std::error::Error>>{
     let arrow_address = base_addr + arrow_offset;
 
     let arrows: u32 = 999_999;
-
+    let arrows = arrows.to_le_bytes(); // [u8; 4];
+    println!("arrow byte representation: {:?}", arrows);
     unsafe {
-        
-        WriteProcessMemory(process_handle, arrow_address as *mut _, &arrows as *const _ as *const _, std::mem::size_of::<u32>(), None)?;
+        //  &arrows as *const _ as *const _
+        // *const core::ffi::c_void
+        // A pointer to the buffer that contains data to be written in the address space of the specified process.
+        // arrows.as_ptr() = *const u8
+        WriteProcessMemory(process_handle, arrow_address as *const _, arrows.as_ptr() as *const _, std::mem::size_of::<u32>(), None)?;
     }
 
     let _ = unsafe { CloseHandle(process_handle) };
