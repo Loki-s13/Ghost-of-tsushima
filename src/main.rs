@@ -1,4 +1,4 @@
-use cheat::process_id;
+use cheat::infinite_arrows;
 
 mod cheat;
 
@@ -6,6 +6,9 @@ mod cheat;
 extern crate anyhow;
 
 fn main() {
-    let test = process_id("AdjustService.exe").unwrap();
-    println!("Process ID: {}", test);
+    // Result<(), Box<dyn std::error::Error>>
+    if let Err(why) = infinite_arrows() {
+        eprintln!("error: {}", why);
+    };
+
 }
