@@ -1,6 +1,6 @@
 use std::ffi::OsString;
 use std::os::windows::ffi::OsStringExt;
-use windows::Win32::System::Threading::{OpenProcess, PROCESS_VM_OPERATION, PROCESS_VM_WRITE};
+use windows::Win32::System::Threading::{OpenProcess, PROCESS_VM_OPERATION, PROCESS_VM_READ, PROCESS_VM_WRITE};
 use windows::Win32::Foundation::{CloseHandle, HANDLE, HMODULE, MAX_PATH};
 use windows::Win32::System::Diagnostics::Debug::WriteProcessMemory;
 use windows::Win32::System::Diagnostics::ToolHelp::{CreateToolhelp32Snapshot, Process32FirstW, Process32NextW, PROCESSENTRY32W, TH32CS_SNAPPROCESS};
@@ -73,7 +73,7 @@ fn base_address(process_handle: HANDLE, module_name: &'static str) -> Result<u64
 pub fn infinite_arrows() -> Result<(), Box<dyn std::error::Error>>{
     let pid = process_id("GhostOfTsushima.exe")?;
 
-    let process_handle = unsafe {OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION, false, pid)}?;  
+    let process_handle = unsafe {OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION | PROCESS_VM_READ, false, pid)}?;  
 
     let base_addr = base_address(process_handle, "GhostOfTsushima.exe")?;
 
